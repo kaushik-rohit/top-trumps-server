@@ -20,7 +20,10 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Run tests
-      run: python -m unittest discover
+      run: coverage -m unittest discover
 
     - name: Build docker image
       run: docker build . --file Dockerfile --tag top-trumps-server:$(date +%s)
+
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v1.0.1
