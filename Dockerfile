@@ -14,6 +14,8 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+EXPOSE 5000
+
 ENTRYPOINT [ "python" ]
 
 CMD [ "./src/app.py" ]
