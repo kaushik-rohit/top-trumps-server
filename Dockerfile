@@ -16,4 +16,4 @@ COPY . .
 
 ENTRYPOINT [ "python" ]
 
-CMD [ "./src/app.py" ]
+CMD [ "./src/top_trumps.py" ]
