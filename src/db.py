@@ -55,9 +55,14 @@ def genre_all():
     genre_list = [elem['_id'] for elem in list(genres)]
     return genre_list
 
+def count_movies(yearFrom, yearTo, genre = None):
+    count = db.movies.find({'release_date':{'$gte': yearFrom, '$lte': yearTo}}).count()
+    return count
+
 
 # testing
 if __name__ == "__main__":
-    # print(card_query(1,1))
-    # print(year_bounds())
+    print(card_query(1,1))
+    print(year_bounds())
     print(genre_all())
+    print(count_movies(1980, 2000))
