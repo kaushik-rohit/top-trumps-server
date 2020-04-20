@@ -5,6 +5,7 @@ import db
 
 
 @app.route('/game/<int:game_id>/<int:round_num>', methods=['GET'])
+@cross_origin()
 def text_query(game_id, round_num):
     return jsonify(db.card_query(game_id, round_num))
 
