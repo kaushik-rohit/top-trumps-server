@@ -34,10 +34,10 @@ jobs:
 
       - name: Tags
         run: |
-          docker tag $IMAGE_NAME ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:${{ github.sha }}
+          docker tag $IMAGE_NAME ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:$(date +%s)
           docker tag $IMAGE_NAME ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:latest
 
       - name: Push image
         run: |
-          docker push ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:$(date +%s)
           docker push ${{ secrets.DOCKER_USER }}/$IMAGE_NAME:latest
