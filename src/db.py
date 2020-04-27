@@ -8,12 +8,12 @@ pymongo = PyMongo(app)
 db = pymongo.db
 
 
-def card_query(game_id, round_num):
+def card_query(round_num):
     fields = {'_id': 0, 'genres': 0, 'release_date': 0, 'movieId':0, 'id':0}
     # condition = {'revenue': {'$gt': 0}} # skip those movies with missing revenue
-    cursor = db.movies.find(projection = fields, skip = (round_num - 1) * 20).limit(1)
+    cursor = db.movies.find(projection = fields, skip = (round_num - 1) * 20).limit(20)
     docs = list(cursor)
-    print(docs[0].keys())
+    # print(docs[0].keys())
     return docs
 
 
@@ -63,7 +63,7 @@ def count_movies(yearFrom, yearTo, genre = None):
 
 # testing
 if __name__ == "__main__":
-    print(card_query(1,1))
+    print(card_query(1))
     # print(year_bounds())
     # print(genre_all())
     # print(count_movies(1980, 2000))
