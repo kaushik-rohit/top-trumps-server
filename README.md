@@ -17,3 +17,6 @@ The application makes use of docker containers. Follow the steps below to run it
 
 1) To build the docker image run ``sudo docker build -t image_name:latest .``
 2) To run the docker image, use ``sudo docker run -d -p 5001:5001 image_name``
+
+### Accessibility
+Access the server at http://0.0.0.0:5001/. This address & port are valid for both local execution as well as running docker images (as long as step 2) in the above section is applied).
