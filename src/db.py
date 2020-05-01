@@ -2,7 +2,7 @@ from flask_pymongo import PyMongo, ASCENDING, DESCENDING
 from app import app
 
 # configure database
-db_url = 'localhost:27017'
+db_url = 'db:27017'
 app.config['MONGO_URI'] = 'mongodb://{}/ase'.format(db_url)
 pymongo = PyMongo(app)
 db = pymongo.db
@@ -22,10 +22,10 @@ def year_bounds():
     find the lower bound and upper bound  of the year of movies
     """
     bounds = list(db.movies.aggregate([
-        { "$group": { 
+        { "$group": {
             "_id": None,
-            "lb": { "$max": "$release_date" }, 
-            "up": { "$min": "$release_date" } 
+            "lb": { "$max": "$release_date" },
+            "up": { "$min": "$release_date" }
         }},
     ]))
     lb = bounds[0]['lb']
@@ -50,7 +50,7 @@ def genre_all():
         {
           '$group':{
               '_id': '$genres.name'
-          }  
+          }
         }
     ])
     genre_list = [elem['_id'] for elem in list(genres)]
