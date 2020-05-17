@@ -3,7 +3,7 @@ from app import app
 from random import randint
 
 # configure database
-db_url = 'localhost:27017' # db for docker
+db_url = 'db:27017' # db for docker, localhost for local
 db_name = 'ase'
 app.config['MONGO_URI'] = 'mongodb://{}/{}'.format(db_url, db_name)
 pymongo = PyMongo(app)
