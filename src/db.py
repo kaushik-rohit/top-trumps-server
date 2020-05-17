@@ -3,7 +3,7 @@ from app import app
 from random import randint
 
 # configure database
-db_url = 'db:27017'
+db_url = 'localhost:27017' # db for docker
 db_name = 'ase'
 app.config['MONGO_URI'] = 'mongodb://{}/{}'.format(db_url, db_name)
 pymongo = PyMongo(app)
@@ -15,9 +15,9 @@ def card_query(game_num):
     fields = {'_id': 0, 'genres': 0, 'release_date': 0, 'movieId':0, 'id':0}
     # set a random seed to note start from the beginning when re-enter the game
     start_pos = 0
-    if game_num == 0:
-        start_pos = randint(1, 1000)
-    cursor = db.movies.find(projection = fields, skip = (start_pos + game_num - 1) * 20).limit(20)
+    if game_num == 1:
+        start_pos = randint(1, 1200)
+    cursor = db.movies.find(projection = fields, skip = (start_pos + game_num - 1) * 20 % 1200).limit(20)
     docs = list(cursor)
     return docs
 
