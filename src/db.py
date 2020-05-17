@@ -1,22 +1,28 @@
 from flask_pymongo import PyMongo, ASCENDING, DESCENDING
 from app import app
+from random import randint
 
 # configure database
 db_url = 'db:27017'
-app.config['MONGO_URI'] = 'mongodb://{}/ase'.format(db_url)
+db_name = 'ase'
+app.config['MONGO_URI'] = 'mongodb://{}/{}'.format(db_url, db_name)
 pymongo = PyMongo(app)
 db = pymongo.db
 
 
-def card_query(round_num):
+def card_query(game_num):
+    # skip attributes that are not needed in the frontend
     fields = {'_id': 0, 'genres': 0, 'release_date': 0, 'movieId':0, 'id':0}
-    # condition = {'revenue': {'$gt': 0}} # skip those movies with missing revenue
-    cursor = db.movies.find(projection = fields, skip = (round_num - 1) * 20).limit(20)
+    # set a random seed to note start from the beginning when re-enter the game
+    start_pos = 0
+    if game_num == 0:
+        start_pos = randint(1, 1000)
+    cursor = db.movies.find(projection = fields, skip = (start_pos + game_num - 1) * 20).limit(20)
     docs = list(cursor)
-    # print(docs[0].keys())
     return docs
 
 
+# private function, check bounds
 def year_bounds():
     """
     find the lower bound and upper bound  of the year of movies
@@ -39,6 +45,7 @@ def year_bounds():
     return lb, up
 
 
+# private function, check all genres
 def genre_all():
     """
     find distinct genres in the movies dataset
@@ -56,6 +63,8 @@ def genre_all():
     genre_list = [elem['_id'] for elem in list(genres)]
     return genre_list
 
+
+# count number of movies for displaying in login page
 def count_movies(yearFrom, yearTo, genre = None):
     count = db.movies.find({'release_date':{'$gte': yearFrom, '$lte': yearTo}}).count()
     return count
