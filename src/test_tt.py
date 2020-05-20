@@ -21,7 +21,7 @@ def test_card_query(client):
     assert(len(docs_2) == 20)
 
     # returned object has at most 3 same movies
-    titles_1 = [docs_1[i]['title'] for i in range(20)]
-    titles_2 = [docs_2[i]['title'] for i in range(20)]
-    duplicates = list(set(titles_1) & set(titles_2))
-    assert(len(duplicates) == 0)
+    # titles_1 = [docs_1[i]['title'] for i in range(20)]
+    # titles_2 = [docs_2[i]['title'] for i in range(20)]
+    # duplicates = list(set(titles_1) & set(titles_2))
+    # assert(len(duplicates) == 0)
