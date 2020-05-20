@@ -29,8 +29,8 @@ jobs:
     - name: Pull db docker image and run it
       run: |
           docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PWD }}
-          docker pull ${{ secrets.DOCKER_USER }}/db:latest
-          docker run -dp 27017:27017 db
+          docker pull ${{ secrets.DOCKER_USER }}/toptrumps-db:latest
+          docker run -dp 27017:27017 toptrumps-db
 
     - name: Run tests
       run: coverage run -m pytest
