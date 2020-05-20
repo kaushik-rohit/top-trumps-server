@@ -13,5 +13,4 @@ def text_query(game_num):
 @app.route('/<int:yearFrom>/<int:yearTo>/<string:genre>/moviesCount',methods = ['GET'])
 @cross_origin()
 def moviesCount(yearFrom, yearTo, genre):
-    response = jsonify(db.count_movies(yearFrom, yearTo, genre))
-    return response
+    return jsonify(db.count_movies(yearFrom, yearTo, genre))

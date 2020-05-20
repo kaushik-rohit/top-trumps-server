@@ -30,8 +30,8 @@ def year_bounds():
     bounds = list(db.movies.aggregate([
         { "$group": {
             "_id": None,
-            "lb": { "$max": "$release_date" },
-            "up": { "$min": "$release_date" }
+            "lb": { "$min": "$release_date" },
+            "up": { "$max": "$release_date" }
         }},
     ]))
     lb = bounds[0]['lb']
@@ -72,7 +72,7 @@ def count_movies(yearFrom, yearTo, genre = None):
 
 # testing
 if __name__ == "__main__":
-    print(card_query(1))
-    # print(year_bounds())
+    # print(card_query(1))
+    print(year_bounds())
     # print(genre_all())
-    # print(count_movies(1980, 2000))
+    print(count_movies(1893, 3000))

@@ -25,3 +25,14 @@ def test_card_query(client):
     # titles_2 = [docs_2[i]['title'] for i in range(20)]
     # duplicates = list(set(titles_1) & set(titles_2))
     # assert(len(duplicates) == 0)
+
+def test_login_query(client):
+    res = client.get('/3000/3000/all/moviesCount')
+    print(res)
+    cnt = json.loads(res.data)
+    assert(cnt == 0)
+
+    res_1 = client.get('/1000/3000/all/moviesCount')
+    cnt = json.loads(res_1.data)
+    assert(cnt > 1)
+

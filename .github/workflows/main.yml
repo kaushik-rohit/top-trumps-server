@@ -26,8 +26,14 @@ jobs:
     - name: Install
       run: pip install -r requirements.txt
 
+    - name: Pull db docker image and run it
+      run: |
+          docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PWD }}
+          docker pull ${{ secrets.DOCKER_USER }}/db:latest
+          docker run -dp 27017:27017 db
+
     - name: Run tests
-      run: coverage run -m unittest discover
+      run: coverage run -m pytest
 
     - name: Build docker image
       run: docker build . --file Dockerfile --tag top-trumps-server:$(date +%s)
