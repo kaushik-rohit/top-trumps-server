@@ -15,7 +15,7 @@ def card_query(game_num):
     fields = {'_id': 0, 'genres': 0, 'release_date': 0, 'movieId':0, 'id':0}
     # set a random seed to the beginning of the game
     start_pos = randint(1, 1200)
-    cursor = db.movies.find(projection = fields, skip = (start_pos + game_num - 1) * 20 % 1200).limit(20)
+    cursor = db.movies.find(projection = fields, skip = (start_pos + game_num - 1) * 20 % 1000).limit(20)
     docs = list(cursor)
     # shuffle the objects in the list
     shuffle(docs)
