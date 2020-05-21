@@ -5,8 +5,8 @@ import os
 
 # if in container return True
 SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
-print("======={}========".format(SECRET_KEY))
-db_url = 'db:27017' # db for docker, localhost for local
+print("AM_I_IN_A_DOCKER_CONTAINER======={}========".format(SECRET_KEY))
+db_url = 'localhost:27017' # db for docker, localhost for local
 if SECRET_KEY:
     db_url = 'db:27017' 
 
