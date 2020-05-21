@@ -1,9 +1,15 @@
 from flask_pymongo import PyMongo, ASCENDING, DESCENDING
 from app import app
 from random import randint, shuffle
+import os
+
+# if in container return True
+SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
+db_url = 'db:27017' # db for docker, localhost for local
+if SECRET_KEY:
+    db_url = 'localhost:27017' 
 
 # configure database
-db_url = 'localhost:27017' # db for docker, localhost for local
 db_name = 'ase'
 app.config['MONGO_URI'] = 'mongodb://{}/{}'.format(db_url, db_name)
 pymongo = PyMongo(app)
@@ -15,6 +21,7 @@ def card_query(game_num):
     fields = {'_id': 0, 'genres': 0, 'release_date': 0, 'movieId':0, 'id':0}
     # set a random seed to the beginning of the game
     start_pos = randint(1, 1200)
+
     cursor = db.movies.find(projection = fields, skip = (start_pos + game_num - 1) * 20 % 1000).limit(20)
     docs = list(cursor)
     # shuffle the objects in the list
