@@ -1,22 +1,35 @@
 from flask_pymongo import PyMongo, ASCENDING, DESCENDING
 from app import app
+from random import randint, shuffle
+import os
+
+# if in container return True
+SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
+db_url = 'localhost:27017' # db for docker, localhost for local
+if SECRET_KEY:
+    db_url = 'db:27017' 
 
 # configure database
-db_url = 'db:27017'
-app.config['MONGO_URI'] = 'mongodb://{}/ase'.format(db_url)
+db_name = 'ase'
+app.config['MONGO_URI'] = 'mongodb://{}/{}'.format(db_url, db_name)
 pymongo = PyMongo(app)
 db = pymongo.db
 
 
-def card_query(round_num):
+def card_query(game_num):
+    # skip attributes that are not needed in the frontend
     fields = {'_id': 0, 'genres': 0, 'release_date': 0, 'movieId':0, 'id':0}
-    # condition = {'revenue': {'$gt': 0}} # skip those movies with missing revenue
-    cursor = db.movies.find(projection = fields, skip = (round_num - 1) * 20).limit(20)
+    # set a random seed to the beginning of the game
+    start_pos = randint(1, 1200)
+
+    cursor = db.movies.find(projection = fields, skip = (start_pos + game_num - 1) * 20 % 1000).limit(20)
     docs = list(cursor)
-    # print(docs[0].keys())
+    # shuffle the objects in the list
+    shuffle(docs)
     return docs
 
 
+# private function, check bounds
 def year_bounds():
     """
     find the lower bound and upper bound  of the year of movies
@@ -24,8 +37,8 @@ def year_bounds():
     bounds = list(db.movies.aggregate([
         { "$group": {
             "_id": None,
-            "lb": { "$max": "$release_date" },
-            "up": { "$min": "$release_date" }
+            "lb": { "$min": "$release_date" },
+            "up": { "$max": "$release_date" }
         }},
     ]))
     lb = bounds[0]['lb']
@@ -39,6 +52,7 @@ def year_bounds():
     return lb, up
 
 
+# private function, check all genres
 def genre_all():
     """
     find distinct genres in the movies dataset
@@ -56,6 +70,8 @@ def genre_all():
     genre_list = [elem['_id'] for elem in list(genres)]
     return genre_list
 
+
+# count number of movies for displaying in login page
 def count_movies(yearFrom, yearTo, genre = None):
     count = db.movies.find({'release_date':{'$gte': yearFrom, '$lte': yearTo}}).count()
     return count
@@ -63,7 +79,7 @@ def count_movies(yearFrom, yearTo, genre = None):
 
 # testing
 if __name__ == "__main__":
-    print(card_query(1))
-    # print(year_bounds())
+    # print(card_query(1))
+    print(year_bounds())
     # print(genre_all())
-    # print(count_movies(1980, 2000))
+    # print(count_movies(1893, 3000))
