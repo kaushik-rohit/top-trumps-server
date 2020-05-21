@@ -5,9 +5,9 @@ import os
 
 # if in container return True
 SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
-db_url = 'db:27017' # db for docker, localhost for local
+db_url = 'localhost:27017' # db for docker, localhost for local
 if SECRET_KEY:
-    db_url = 'localhost:27017' 
+    db_url = 'db:27017' 
 
 # configure database
 db_name = 'ase'
@@ -82,4 +82,4 @@ if __name__ == "__main__":
     # print(card_query(1))
     print(year_bounds())
     # print(genre_all())
-    print(count_movies(1893, 3000))
+    # print(count_movies(1893, 3000))
