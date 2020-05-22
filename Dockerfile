@@ -14,6 +14,9 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
+# environment variable using in db
+ENV AM_I_IN_A_DOCKER_CONTAINER Yes
+
 EXPOSE 5001
 
 ENTRYPOINT [ "python" ]
