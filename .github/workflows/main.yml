@@ -4,22 +4,41 @@ on:
     branches:
         - master
         - develop
-    pull_request:
-      branches:
+  pull_request:
+    branches:
         - master
+        - develop
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
 
     steps:
     - uses: actions/checkout@v1
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
 
     - name: Install
       run: pip install -r requirements.txt
 
+    - name: Pull db docker image and run it
+      run: |
+          docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PWD }}
+          docker pull ${{ secrets.DOCKER_USER }}/toptrumps-db:latest
+          docker run -dp 27017:27017 ${{ secrets.DOCKER_USER }}/toptrumps-db:latest
+
     - name: Run tests
-      run: python -m unittest discover
+      run: coverage run -m pytest
 
     - name: Build docker image
       run: docker build . --file Dockerfile --tag top-trumps-server:$(date +%s)
+
+    - name: Coveralls GitHub Action
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      run: coveralls

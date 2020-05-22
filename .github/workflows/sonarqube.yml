@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+      types: [opened, synchronize, reopened]
+
+name: Code Quality
+jobs:
+  sonarcloud:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Sonar Cloud
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        export SONAR_SCANNER_VERSION=4.2.0.1873
+        export SONAR_SCANNER_HOME=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux
+        curl --create-dirs -sSLo $HOME/.sonar/sonar-scanner.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VERSION-linux.zip
+        unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
+        export PATH=$SONAR_SCANNER_HOME/bin:$PATH
+        export SONAR_SCANNER_OPTS="-server"
+
+        sonar-scanner \
+        -Dsonar.organization=kaushik-rohit \
+        -Dsonar.projectKey=kaushik-rohit_top-trumps-server \
+        -Dsonar.sources=./src \
+        -Dsonar.host.url=https://sonarcloud.io \
+        -Dsonar.login=b9a72c92b9bff9fc4ecdad6b426a952403f9eab6
