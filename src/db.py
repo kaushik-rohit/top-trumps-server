@@ -1,6 +1,6 @@
 from flask_pymongo import PyMongo, ASCENDING, DESCENDING
 from app import app
-from random import randint, shuffle
+import random 
 import os
 
 # if in container return True
@@ -17,17 +17,24 @@ pymongo = PyMongo(app)
 db = pymongo.db
 
 
-def card_query(game_num):
+def card_query(game_num, yearFrom = None, yearTo = None, genre = None):
     # skip attributes that are not needed in the frontend
-    fields = {'_id': 0, 'genres': 0, 'release_date': 0, 'movieId':0, 'id':0}
+    filter = {'release_date':{'$gte': yearFrom, '$lte': yearTo}, 'genres.name': genre.title()}
+    if genre == 'all':
+        filter = {'release_date':{'$gte': yearFrom, '$lte': yearTo}}
     # set a random seed to the beginning of the game
-    start_pos = randint(1, 1200)
-
-    cursor = db.movies.find(projection = fields, skip = (start_pos + game_num - 1) * 20 % 1000).limit(20)
+    # start_pos = randint(1, 1500)
+    fields = {'_id': 0, 'genres': 0, 'release_date': 0, 'movieId':0, 'id':0}
+    cursor = db.movies.find(filter = filter, projection = fields)
     docs = list(cursor)
+    # print(docs)
+    res = []
+    # sample 20 id and fecth
+    if len(docs) >= 20:
+        res = random.sample(docs, k = 20)
+        random.shuffle(res)
     # shuffle the objects in the list
-    shuffle(docs)
-    return docs
+    return res
 
 
 # private function, check bounds
@@ -44,12 +51,6 @@ def year_bounds():
     ]))
     lb = bounds[0]['lb']
     up = bounds[0]['up']
-
-    # select the year from the string, or integer
-    if not isinstance(lb, int):
-        lb = int(lb[0:4])
-    if not isinstance(up, int):
-        up = int(up[0:4])
     return lb, up
 
 
@@ -73,14 +74,18 @@ def genre_all():
 
 
 # count number of movies for displaying in login page
-def count_movies(yearFrom, yearTo, genre = None):
-    count = db.movies.find({'release_date':{'$gte': yearFrom, '$lte': yearTo}}).count()
+def count_movies(yearFrom, yearTo, genre = 'all'):
+    if genre == 'all':
+        count = db.movies.find({'release_date':{'$gte': yearFrom, '$lte': yearTo}}).count()
+    else:
+        # title() convert the first word into Uppercase
+        count = db.movies.find({'release_date':{'$gte': yearFrom, '$lte': yearTo}, 'genres.name': genre.title()}).count()
     return count
 
 
 # testing
 if __name__ == "__main__":
-    # print(card_query(1))
-    print(year_bounds())
+    print(card_query(1, 1900, 2000, 'all'))
+    # print(year_bounds())
     # print(genre_all())
-    # print(count_movies(1893, 3000))
+    # print(count_movies(1893, 3000, 'Adventure'))
