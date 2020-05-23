@@ -85,7 +85,7 @@ def count_movies(yearFrom, yearTo, genre = 'all'):
 
 # testing
 if __name__ == "__main__":
-    # print(card_query(1900, 2000, 'all'))
+    print(card_query(1900, 2000, 'all'))
     # print(year_bounds())
     # print(genre_all())
     # print(count_movies(1893, 3000, 'Adventure'))
