@@ -17,7 +17,7 @@ pymongo = PyMongo(app)
 db = pymongo.db
 
 
-def card_query(game_num, yearFrom = None, yearTo = None, genre = None):
+def card_query(yearFrom = None, yearTo = None, genre = None):
     # skip attributes that are not needed in the frontend
     filter = {'release_date':{'$gte': yearFrom, '$lte': yearTo}, 'genres.name': genre.title()}
     if genre == 'all':

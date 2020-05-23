@@ -11,12 +11,12 @@ def client():
 
 def test_card_query(client):
     # test game cnt 1
-    res_1 = client.get('/game/1900/2000/adventure/1')
+    res_1 = client.get('/game/1900/2000/adventure')
     docs_1 = json.loads(res_1.data)
     assert(len(docs_1) == 20)
 
     # test game cnt 5
-    res_2 = client.get('/game/1900/2000/adventure/5')
+    res_2 = client.get('/game/1900/2000/adventure')
     docs_2 = json.loads(res_2.data)
     assert(len(docs_2) == 20)
 
