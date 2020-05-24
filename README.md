@@ -1,5 +1,5 @@
 # Top Trumps Movie Edition Server (Python Flask)
-
+![Code Quality](https://github.com/kaushik-rohit/top-trumps-server/workflows/Code%20Quality/badge.svg)
 ### Docker
 To locally build and run the Server microservice, follow the following steps:
 
